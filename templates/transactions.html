@@ -3,6 +3,7 @@
 {% block title %}Alla Transaktioner{% endblock %}
 
 {% block content %}
+<!--lista alla transaktioner, visa datum,typ osv osv-->
 <div class="container">
     <h1>📜 Transaktioner</h1>
     <table>
@@ -17,6 +18,7 @@
             </tr>
         </thead>
         <tbody>
+            <!--loopa igenom och visa alla transaktionern och kunna länka till en specifik kund w href -->
             {% for transaction in transactions %}
             <tr>
                 <td>{{ transaction.date.strftime('%Y-%m-%d %H:%M') }}</td>

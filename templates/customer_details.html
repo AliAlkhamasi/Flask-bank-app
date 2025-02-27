@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container">
     <h1>👤 Kundbild</h1>
-
+    <!--kundens info "kundbild"-->
     <h2>🔹 Kundinformation</h2>
     <p><strong>Kundnummer:</strong> {{ customer.id }}</p>
     <p><strong>Namn:</strong> {{ customer.given_name }} {{ customer.surname }}</p>
@@ -15,7 +15,7 @@
     <p><strong>Email:</strong> {{ customer.email_address }}</p>
 
     <h2>💰 Totalt saldo: {{ total_balance | round(2) }} SEK</h2>
-
+    <!--har kunden konto? visa datum, typ etc etc-->
     <h2>📋 Kundens konton</h2>
     {% if accounts %}
     <table>

@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container">
     <h1>👥 Alla kunder</h1>
-
+    <!--sök i "alla kunder"-->
     <form method="GET" action="{{ url_for('all_customers') }}">
         <input type="text" name="q" placeholder="Sök efter namn eller stad..." value="{{ q }}">
         <button type="submit">Sök</button>
@@ -49,7 +49,7 @@
             {% endfor %}
         </tbody>
     </table>
-
+        <!--pagingering-->
     <div class="pagination">
         {% if has_prev %}
             <a href="{{ url_for('all_customers', page=page-1, sort_column=sort_column, sort_order=sort_order, q=q) }}">⬅️ Föregående</a>

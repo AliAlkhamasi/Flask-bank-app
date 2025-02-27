@@ -6,6 +6,7 @@
 <div class="container">
     <h1>💰 Konto {{ account.id }}</h1>
     <p><strong>Saldo:</strong> {{ account.balance }} kr</p>
+    <!--visa transaktioner-->
 
     <h2>📜 Transaktioner</h2>
     {% if transactions %}
@@ -19,6 +20,7 @@
                     <th>Nytt saldo</th>
                 </tr>
             </thead>
+            <!--visa datum,typ,summa osv-->
             <tbody>
                 {% for transaction in transactions %}
                 <tr>
@@ -36,24 +38,21 @@
     {% endif %}
     <!--snyggast med emojis eller inte?, testa båda-->
     <!--testa kanske roliga universe.io knappar??-->
-     <!-- 💰 Hantera saldo -->
+     <!-- Hantera saldo, insättning,uttag,överföring -->
      <h2>💰 Hantera saldo</h2>
 
-     <!-- Insättning -->
      <form method="POST" action="{{ url_for('deposit', account_id=account.id) }}">
          <label for="deposit_amount">💵 Sätt in pengar:</label>
          <input type="number" step="0.01" name="amount" id="deposit_amount" required>
          <button type="submit">Sätt in</button>
      </form>
  
-     <!-- Uttag -->
      <form method="POST" action="{{ url_for('withdraw', account_id=account.id) }}">
          <label for="withdraw_amount">🏧 Ta ut pengar:</label>
          <input type="number" step="0.01" name="amount" id="withdraw_amount" required>
          <button type="submit">Ta ut</button>
      </form>
  
-     <!-- Överföring -->
      <form method="POST" action="{{ url_for('transfer', account_id=account.id) }}">
          <label for="target_account">📤 Överför till konto:</label>
          <input type="number" name="target_account" id="target_account" required>
