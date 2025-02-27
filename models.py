@@ -79,7 +79,7 @@ class Account(db.Model):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     account_type: Mapped[AccountType] = mapped_column(
-        Enum(AccountType, native_enum=True, create_constraint=True),  # native_enum=True for MySQL
+        Enum(AccountType, native_enum=True, create_constraint=True),
         nullable=False
     )
     created: Mapped[DateTime] = mapped_column(DateTime, nullable=False)
