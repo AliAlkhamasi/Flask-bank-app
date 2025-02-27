@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Login</h1>
+<form method="POST" action="{{ url_for_security('login') }}">
+    
+    {{ form.hidden_tag() }}
+    
+    <label for="email">Email:</label>
+    <input type="email" name="email" required onfocus="this.value=''" placeholder="Enter your email">
+    
+    <label for="password">Password:</label>
+    <input type="password" name="password" required>
+    
+    <button type="submit">Login</button>
+
+</form>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}Alla kunder{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>👥 Alla kunder</h1>
+
+    <form method="GET" action="{{ url_for('all_customers') }}">
+        <input type="text" name="q" placeholder="Sök efter namn eller stad..." value="{{ q }}">
+        <button type="submit">Sök</button>
+    </form>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Kundnummer
+                    <a href="{{ url_for('all_customers', sort_column='id', sort_order='asc', page=page, q=q) }}">⬆️</a>
+                    <a href="{{ url_for('all_customers', sort_column='id', sort_order='desc', page=page, q=q) }}">⬇️</a>
+                </th>
+                <th>Födelsedatum
+                    <a href="{{ url_for('all_customers', sort_column='id', sort_order='asc', page=page, q=q) }}">⬆️</a>
+                    <a href="{{ url_for('all_customers', sort_column='id', sort_order='desc', page=page, q=q) }}">⬇️</a>
+                </th>
+                <th>Namn
+                    <a href="{{ url_for('all_customers', sort_column='given_name', sort_order='asc', page=page, q=q) }}">⬆️</a>
+                    <a href="{{ url_for('all_customers', sort_column='given_name', sort_order='desc', page=page, q=q) }}">⬇️</a>
+                </th>
+                <th>Adress
+                    <a href="{{ url_for('all_customers', sort_column='streetaddress', sort_order='asc', page=page, q=q) }}">⬆️</a>
+                    <a href="{{ url_for('all_customers', sort_column='streetaddress', sort_order='desc', page=page, q=q) }}">⬇️</a>
+                </th>
+                <th>Stad
+                    <a href="{{ url_for('all_customers', sort_column='city', sort_order='asc', page=page, q=q) }}">⬆️</a>
+                    <a href="{{ url_for('all_customers', sort_column='city', sort_order='desc', page=page, q=q) }}">⬇️</a>
+                </th>
+            </tr>
+        </thead>
+        
+        <tbody>
+            {% for customer in customers %}
+            <tr>
+                <td><a href="{{ url_for('customer_details', customer_id=customer.id) }}">{{ customer.id }}</a></td>
+                <td>{{ customer.national_id }}</td>
+                <td>{{ customer.given_name }} {{ customer.surname }}</td>
+                <td>{{ customer.streetaddress }}</td>
+                <td>{{ customer.city }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        {% if has_prev %}
+            <a href="{{ url_for('all_customers', page=page-1, sort_column=sort_column, sort_order=sort_order, q=q) }}">⬅️ Föregående</a>
+        {% endif %}
+    
+        <span>Sida {{ page }} av {{ pages }}</span>
+    
+        {% if has_next %}
+            <a href="{{ url_for('all_customers', page=page+1, sort_column=sort_column, sort_order=sort_order, q=q) }}">Nästa ➡️</a>
+        {% endif %}
+    </div>    
+</div>
+{% endblock %}
+
+

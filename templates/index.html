@@ -3,5 +3,12 @@
 {% block title %}Home page{% endblock title%}
 
 {% block content %}
-<h1>Welcome to Lindas SUPER-BANK</h1>
+<h1>Välkommen till banken!</h1>
+<div class="container text-center mt-5">
+    <div class="card mt-4 p-3 shadow-sm">
+        <p><strong>Antal kunder:</strong> {{ num_customers }}</p>
+        <p><strong>Antal konton:</strong> {{ num_accounts }}</p>
+        <p><strong>Totalt saldo:</strong> {{ total_balance | round(2) }} SEK</p>
+    </div>
+</div>
 {% endblock content %}

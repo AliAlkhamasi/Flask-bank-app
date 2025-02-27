@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}Konto {{ account.id }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>💰 Konto {{ account.id }}</h1>
+    <p><strong>Saldo:</strong> {{ account.balance }} kr</p>
+
+    <h2>📜 Transaktioner</h2>
+    {% if transactions %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Datum</th>
+                    <th>Typ</th>
+                    <th>Operation</th>
+                    <th>Belopp</th>
+                    <th>Nytt saldo</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in transactions %}
+                <tr>
+                    <td>{{ transaction.date.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>{{ transaction.type.value }}</td>
+                    <td>{{ transaction.operation.value }}</td>
+                    <td>{{ transaction.amount }} kr</td>
+                    <td>{{ transaction.new_balance }} kr</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Inga transaktioner hittades för detta konto.</p>
+    {% endif %}
+    <!--snyggast med emojis eller inte?, testa båda-->
+    <!--testa kanske roliga universe.io knappar??-->
+     <!-- 💰 Hantera saldo -->
+     <h2>💰 Hantera saldo</h2>
+
+     <!-- Insättning -->
+     <form method="POST" action="{{ url_for('deposit', account_id=account.id) }}">
+         <label for="deposit_amount">💵 Sätt in pengar:</label>
+         <input type="number" step="0.01" name="amount" id="deposit_amount" required>
+         <button type="submit">Sätt in</button>
+     </form>
+ 
+     <!-- Uttag -->
+     <form method="POST" action="{{ url_for('withdraw', account_id=account.id) }}">
+         <label for="withdraw_amount">🏧 Ta ut pengar:</label>
+         <input type="number" step="0.01" name="amount" id="withdraw_amount" required>
+         <button type="submit">Ta ut</button>
+     </form>
+ 
+     <!-- Överföring -->
+     <form method="POST" action="{{ url_for('transfer', account_id=account.id) }}">
+         <label for="target_account">📤 Överför till konto:</label>
+         <input type="number" name="target_account" id="target_account" required>
+ 
+         <label for="transfer_amount">💸 Belopp:</label>
+         <input type="number" step="0.01" name="amount" id="transfer_amount" required>
+ 
+         <button type="submit">Överför</button>
+     </form>
+
+    <a href="{{ url_for('customer_details', customer_id=account.customer_id) }}">⬅️ Tillbaka till kund</a>
+</div>
+{% endblock %}

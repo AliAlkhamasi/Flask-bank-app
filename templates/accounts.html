@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Alla konton{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>💰 Alla konton</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Kontonummer</th>
+                <th>Kund-ID</th>
+                <th>Typ</th>
+                <th>Saldo</th>
+                <th>Skapat</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for account in accounts %}
+            <tr>
+                <td>{{ account.id }}</td>
+                <td>{{ account.customer_id }}</td>
+                <td>{{ account.account_type.value }}</td>
+                <td>{{ account.balance | round(2) }} SEK</td>
+                <td>{{ account.created.strftime('%Y-%m-%d') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

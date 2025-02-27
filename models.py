@@ -1,20 +1,51 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import String, Integer, DateTime, ForeignKey, Enum, Numeric
+from sqlalchemy import String, Integer, DateTime, ForeignKey, Enum, Numeric, Boolean
 from datetime import datetime, timedelta
 from faker import Faker
 from decimal import Decimal
+from flask_security import SQLAlchemyUserDatastore, hash_password
+from flask_security.models import fsqla_v3 as fsqla
+
+db = SQLAlchemy()
 
 import random
 import enum
 
-MAX_NR_OF_CUSTOMERS = 50
+MAX_NR_OF_CUSTOMERS = 500 
 MAX_NR_OF_ACCOUNTS = 4
 MINIMUM_NR_OF_ACCOUNTS = 1
 MAX_NR_OF_TRANSACTIONS = 30
 MINIMUM_NR_OF_TRANSACTIONS = 3
 
 db = SQLAlchemy()
+
+roles_users = db.Table(
+    "roles_users",
+    db.Column("user_id", db.Integer(), db.ForeignKey("User.id")),
+    db.Column("role_id", db.Integer(), db.ForeignKey("Role.id")),
+)
+
+class Role(db.Model, fsqla.FsRoleMixin):
+    __tablename__ = "Role"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String(80), nullable=False, unique=True)
+    description: Mapped[str] = mapped_column(String(255), nullable=False)
+
+    users = relationship("User", secondary=roles_users, back_populates="roles")
+
+class User(db.Model, fsqla.FsUserMixin):
+    __tablename__ = "User"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    password: Mapped[str] = mapped_column(String(255), nullable=False)
+    email: Mapped[str] = mapped_column(String(50), nullable=False, unique=True)
+    active: Mapped[bool] = mapped_column(Boolean, default=True)
+    fs_uniquifier: Mapped[str] = mapped_column(String(255), nullable=False, unique=True)
+
+    roles: Mapped[list[Role]] = relationship("Role", secondary=roles_users, back_populates="users")
+
 
 class Customer(db.Model):
     __tablename__ = "Customers"
@@ -48,11 +79,11 @@ class Account(db.Model):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     account_type: Mapped[AccountType] = mapped_column(
-        Enum(AccountType, native_enum=True, create_constraint=True),  # native_enum=True use for MySQL
+        Enum(AccountType, native_enum=True, create_constraint=True),  # native_enum=True for MySQL
         nullable=False
     )
     created: Mapped[DateTime] = mapped_column(DateTime, nullable=False)
-    balance: Mapped[float] = mapped_column(Numeric(precision=12, scale=2), nullable=False)
+    balance: Mapped[Decimal] = mapped_column(Numeric(precision=12, scale=2), nullable=False, default=Decimal(0))
     customer_id: Mapped[int] = mapped_column(ForeignKey("Customers.id"), nullable=False)
 
     customer: Mapped["Customer"] = relationship(
@@ -184,3 +215,22 @@ def seedData(db):
             db.session.commit()
 
         number_of_customers_in_db += 1
+user_datastore = SQLAlchemyUserDatastore(db, User, Role)
+
+def seed_users():
+    with db.session.begin():
+        if not Role.query.first():
+            db.session.add_all([
+                Role(name="Admin", description="Master"),
+                Role(name="Cashier", description="Hantera kunder"),
+            ])
+        
+        if not User.query.first():
+            db.session.add_all([
+                user_datastore.create_user(email="sebastian.ohman@systementor.se", password=hash_password("Hejsan123#"), roles=["Admin"]),
+                user_datastore.create_user(email="sebastian.ohman@teknikhögskolan.se", password=hash_password("Hejsan123#"), roles=["Cashier"]),
+            ])
+        
+        db.session.commit()
+
+

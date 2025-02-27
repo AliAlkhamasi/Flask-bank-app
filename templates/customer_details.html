@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Kundbild{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>👤 Kundbild</h1>
+
+    <h2>🔹 Kundinformation</h2>
+    <p><strong>Kundnummer:</strong> {{ customer.id }}</p>
+    <p><strong>Namn:</strong> {{ customer.given_name }} {{ customer.surname }}</p>
+    <p><strong>Personnummer:</strong> {{ customer.national_id }}</p>
+    <p><strong>Adress:</strong> {{ customer.streetaddress }}, {{ customer.city }}</p>
+    <p><strong>Telefon:</strong> +{{ customer.telephone_country_code }} {{ customer.telephone }}</p>
+    <p><strong>Email:</strong> {{ customer.email_address }}</p>
+
+    <h2>💰 Totalt saldo: {{ total_balance | round(2) }} SEK</h2>
+
+    <h2>📋 Kundens konton</h2>
+    {% if accounts %}
+    <table>
+        <thead>
+            <tr>
+                <th>Kontonummer</th>
+                <th>Typ</th>
+                <th>Saldo</th>
+                <th>Skapat</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for account in customer.accounts %}
+            <tr>
+                <td><a href="{{ url_for('account_details', account_id=account.id) }}">{{ account.id }}</a></td>
+                <td>{{ account.account_type.value }}</td>
+                <td>{{ account.balance | round(2) }} SEK</td>
+                <td>{{ account.created.strftime('%Y-%m-%d') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p>Denna kund har inga registrerade konton.</p>
+    {% endif %}
+</div>
+{% endblock %}

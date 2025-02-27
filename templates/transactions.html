@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Alla Transaktioner{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>📜 Transaktioner</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Datum</th>
+                <th>Typ</th>
+                <th>Operation</th>
+                <th>Belopp</th>
+                <th>Nytt saldo</th>
+                <th>Kontonummer</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for transaction in transactions %}
+            <tr>
+                <td>{{ transaction.date.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td>{{ transaction.type.value }}</td>
+                <td>{{ transaction.operation.value }}</td>
+                <td>{{ transaction.amount }} kr</td>
+                <td>{{ transaction.new_balance }} kr</td>
+                <td><a href="{{ url_for('account_details', account_id=transaction.account_id) }}">{{ transaction.account_id }}</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
